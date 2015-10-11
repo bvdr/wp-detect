@@ -1,7 +1,13 @@
 <?php
 /**
+ * WP Detect 
+ * class that returns external url WordPress version, generator, theme style.css header
+ * 
+ * @example new WP_Detect('wordpress.org');
+ *
  * @author Bogdan Dragomir <hi @ bogdandragomir . com>
  * @link https://github.com/bvdr/wp-detect
+ * @version 0.1
  */
 
 class WP_Detect {
@@ -47,13 +53,16 @@ class WP_Detect {
 		$sf_pattern = '/((https?:\/\/)(.+\/style.css))/';
 		preg_match( $sf_pattern, $urlcontent, $styleurl );
 
-		// geting style.css file header
-		$sylecontent = file_get_contents( $styleurl[0] );
-		$sh_pattern  = '/\/\*([\s\S]*?)\*\//';
-		preg_match( $sh_pattern, $sylecontent, $styleheader );
+		if( $styleurl ){
+
+			// geting style.css file header
+			$sylecontent = file_get_contents( $styleurl[0] );
+			$sh_pattern  = '/\/\*([\s\S]*?)\*\//';
+			preg_match( $sh_pattern, $sylecontent, $styleheader );
+		}
 
 		// showing header
-		echo nl2br( $styleheader[0] );
+		echo $styleheader[0];
 	}
 
 	function show_wp_version( $url ) {
@@ -64,10 +73,10 @@ class WP_Detect {
 			preg_match( $wpv_pattern, $readme, $wpversion );
 
 			// showing version
-			echo "</br>readme.html file found in / and it says: </br>";
-			echo "WordPress " . nl2br( $wpversion[0] ) . " from readme.html</br>";
+			echo "\n readme.html file found in / and it says: \n";
+			echo "WordPress " . $wpversion[0] . "\n\n";
 		} else {
-			echo "readme.html not in rootfolder";
+			echo "\n readme.html not in rootfolder \n";
 		}
 	}
 
@@ -80,7 +89,7 @@ class WP_Detect {
 		foreach ( $generator[2] as $gen_result ) {
 
 			// showing generators
-			echo "Generator: " . nl2br( $gen_result ) . "</br>";
+			echo "Generator: " . $gen_result . "\n";
 		}
 	}
 }
